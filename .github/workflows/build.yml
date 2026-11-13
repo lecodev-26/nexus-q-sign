@@ -72,11 +72,11 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Install Tauri CLI
-        run: cargo install tauri-cli --locked
+        run: cargo install tauri-cli --version "^2.0.0" --locked
 
       - name: Build desktop application
         working-directory: apps/desktop
-        run: cargo tauri build --locked --target ${{ matrix.target }}
+        run: cargo tauri build --target ${{ matrix.target }} -- --locked
 
       - name: Upload installers
         uses: actions/upload-artifact@v4
