@@ -3,6 +3,7 @@ name: NEXUS-Q Sign CI
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -15,56 +16,137 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  core-tests:
-    name: Sign Core tests
+  validate:
+    name: Validate frontend and Rust
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: apps/desktop
+        run: npm ci
+
+      - name: Test locale dictionaries
+        working-directory: apps/desktop
+        run: npm run test:i18n
+
+      - name: Type-check Svelte and build frontend
+        working-directory: apps/desktop
+        run: npm run build
+
+      - name: Install Linux desktop dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential curl file libayatana-appindicator3-dev \
+            librsvg2-dev libssl-dev libwebkit2gtk-4.1-dev libxdo-dev patchelf
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
-      - name: Test Sign Core
+        with:
+          workspaces: |
+            crates/sign-core -> target
+            apps/desktop -> target
+
+      - name: Check Rust formatting
+        run: |
+          cargo fmt --manifest-path crates/sign-core/Cargo.toml -- --check
+          cargo fmt --manifest-path apps/desktop/Cargo.toml -- --check
+
+      - name: Check locked dependency metadata
+        run: |
+          cargo metadata --locked --manifest-path crates/sign-core/Cargo.toml --format-version 1 > /dev/null
+          cargo metadata --locked --manifest-path apps/desktop/Cargo.toml --format-version 1 > /dev/null
+
+      - name: Run Sign Core Clippy
+        run: cargo clippy --locked --manifest-path crates/sign-core/Cargo.toml --all-targets -- -D warnings
+
+      - name: Run desktop Clippy
+        run: cargo clippy --locked --manifest-path apps/desktop/Cargo.toml --all-targets -- -D warnings
+
+      - name: Run Sign Core tests
         run: cargo test --locked --manifest-path crates/sign-core/Cargo.toml
 
+      - name: Check desktop Rust target
+        run: cargo check --locked --manifest-path apps/desktop/Cargo.toml
+
   desktop-build:
-    name: Desktop · ${{ matrix.platform }}
-    needs: core-tests
+    name: Build desktop · ${{ matrix.platform }}
+    needs: validate
     strategy:
       fail-fast: false
       matrix:
         include:
           - platform: Linux x86_64
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
+            bundles: deb,appimage
+            artifact: linux-installers
+            artifact-path: |
+              apps/desktop/target/x86_64-unknown-linux-gnu/release/bundle/deb/*.deb
+              apps/desktop/target/x86_64-unknown-linux-gnu/release/bundle/appimage/*.AppImage
           - platform: Windows x86_64
             os: windows-latest
             target: x86_64-pc-windows-msvc
+            bundles: msi,nsis
+            artifact: windows-installers
+            artifact-path: |
+              apps/desktop/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+              apps/desktop/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
           - platform: macOS Apple Silicon
             os: macos-latest
             target: aarch64-apple-darwin
+            bundles: dmg
+            artifact: macos-arm64-installer
+            artifact-path: apps/desktop/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg
           - platform: macOS Intel
             os: macos-latest
             target: x86_64-apple-darwin
+            bundles: dmg
+            artifact: macos-x64-installer
+            artifact-path: apps/desktop/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/desktop/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: apps/desktop
+        run: npm ci
+
+      - name: Build Svelte frontend
+        working-directory: apps/desktop
+        run: npm run build
 
       - name: Install Linux system dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            build-essential \
-            curl \
-            file \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
-            libssl-dev \
-            libwebkit2gtk-4.1-dev \
-            patchelf
+            build-essential curl file libayatana-appindicator3-dev \
+            librsvg2-dev libssl-dev libwebkit2gtk-4.1-dev libxdo-dev \
+            patchelf libfuse2t64
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
@@ -73,18 +155,25 @@ jobs:
 
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            crates/sign-core -> target
+            apps/desktop -> target
 
       - name: Install Tauri CLI
         run: cargo install tauri-cli --version "^2.0.0" --locked
 
-      - name: Build desktop application
-        working-directory: apps/desktop
-        run: cargo tauri build --target ${{ matrix.target }} -- --locked
+      - name: Verify dependency lockfile
+        run: cargo metadata --locked --manifest-path apps/desktop/Cargo.toml --format-version 1 > /dev/null
 
-      - name: Upload installers
+      - name: Build native installer
+        working-directory: apps/desktop
+        run: cargo tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundles }} -- --locked
+
+      - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: nexus-q-sign-${{ matrix.target }}
-          path: apps/desktop/target/${{ matrix.target }}/release/bundle/
+          name: nexus-q-sign-${{ matrix.artifact }}
+          path: ${{ matrix.artifact-path }}
           if-no-files-found: error
           retention-days: 14

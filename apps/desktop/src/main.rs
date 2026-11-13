@@ -399,7 +399,7 @@ fn sign_document(path: String, state: State<'_, SignState>) -> Result<SignedDocu
 
     let sidecar = PathBuf::from(format!("{}.nqsig", canonical.to_string_lossy()));
     publish_noreplace(&sidecar, &envelope)?;
-    record_history(
+    let history_recorded = record_history(
         &state,
         "sign",
         &canonical,
@@ -437,7 +437,7 @@ fn verify_document(
     let sidecar = sidecar_input
         .canonicalize()
         .map_err(|_| "No se puede acceder al sidecar seleccionado.".to_string())?;
-    let mut sidecar_file = File::open(&sidecar)
+    let sidecar_file = File::open(&sidecar)
         .map_err(|_| "No se puede abrir el sidecar seleccionado.".to_string())?;
     let sidecar_meta = sidecar_file
         .metadata()
@@ -750,7 +750,7 @@ fn parse_hex_id(s: &str) -> Option<[u8; 16]> {
         return None;
     }
     let mut out = [0u8; 16];
-    for (i, pair) in s.as_bytes().chunks_exact(2).enumerate() {
+    for (i, pair) in s.as_bytes().as_chunks::<2>().0.iter().enumerate() {
         let digit = |b: u8| match b {
             b'0'..=b'9' => Some(b - b'0'),
             b'a'..=b'f' => Some(b - b'a' + 10),

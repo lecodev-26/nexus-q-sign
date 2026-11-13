@@ -1,0 +1,24 @@
+{
+  "name": "nexus-q-sign-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 1420 --strictPort",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "build": "npm run check && vite build",
+    "test:i18n": "node --test tests/i18n.test.cjs"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-dialog": "^2.4.0",
+    "svelte": "^5.38.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.2.0",
+    "@tsconfig/svelte": "^5.0.4",
+    "svelte-check": "^4.3.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7"
+  }
+}

@@ -3,7 +3,12 @@
   "productName": "NEXUS-Q Sign",
   "version": "0.1.0",
   "identifier": "org.nexusq.sign",
-  "build": { "frontendDist": "ui" },
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "dist"
+  },
   "app": {
     "withGlobalTauri": true,
     "windows": [{
@@ -15,7 +20,7 @@
       "resizable": true
     }],
     "security": {
-      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:"
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src ipc: http://ipc.localhost http://localhost:1420 ws://localhost:1420"
     }
   },
   "bundle": {
@@ -23,7 +28,7 @@
     "targets": "all",
     "icon": ["icons/icon.png", "icons/icon.ico"],
     "category": "Utility",
-    "shortDescription": "Detached cryptographic document signing",
-    "longDescription": "Local-first detached document signing and verification."
+    "shortDescription": "Local-first detached document signing",
+    "longDescription": "NEXUS-Q Sign is a local-first desktop application for detached document signing and verification using ML-DSA-65."
   }
 }

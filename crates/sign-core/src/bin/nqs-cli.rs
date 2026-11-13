@@ -14,6 +14,7 @@ use zeroize::Zeroizing;
 
 const MAX_DOC: u64 = 1_073_741_824;
 const MAX_SIDE: u64 = 65_536;
+type VerificationResult = (&'static str, Option<String>, Option<[u8; 32]>);
 
 fn main() {
     if let Err(e) = run() {
@@ -232,7 +233,7 @@ fn verify_doc(
     doc: &Path,
     side: &Path,
     svc: &IdentityService,
-) -> Result<(&'static str, Option<String>, Option<[u8; 32]>), String> {
+) -> Result<VerificationResult, String> {
     let side_meta = fs::symlink_metadata(side).map_err(|e| e.to_string())?;
     if !side_meta.is_file() || side_meta.len() > MAX_SIDE {
         return Ok(("malformed_sidecar", None, None));
@@ -376,7 +377,7 @@ fn parse_id(s: &str) -> Option<[u8; 16]> {
         return None;
     }
     let mut o = [0; 16];
-    for (i, p) in s.as_bytes().chunks_exact(2).enumerate() {
+    for (i, p) in s.as_bytes().as_chunks::<2>().0.iter().enumerate() {
         let d = |b| match b {
             b'0'..=b'9' => Some(b - b'0'),
             b'a'..=b'f' => Some(b - b'a' + 10),

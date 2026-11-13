@@ -324,7 +324,7 @@ fn parse_hex_id(s: &str) -> Option<[u8; 16]> {
         return None;
     }
     let mut out = [0u8; 16];
-    for (i, pair) in s.as_bytes().chunks_exact(2).enumerate() {
+    for (i, pair) in s.as_bytes().as_chunks::<2>().0.iter().enumerate() {
         let digit = |b: u8| match b {
             b'0'..=b'9' => Some(b - b'0'),
             b'a'..=b'f' => Some(b - b'a' + 10),

@@ -1,6 +1,6 @@
 # NEXUS-Q Sign — UX/UI Design v0.1
 
-**Estado:** propuesta de diseño de NEXUS-Q Sign 0.1.0 basada en la estética de NEXUS-Q Vault  
+**Estado:** frontend NEXUS-Q Sign 0.1.0 implementado sobre la referencia visual de NEXUS-Q Vault
 **Referencia:** `~/nexus-q-vault`, commit `eaab774` (rama `main`)  
 **Alcance:** sistema visual, arquitectura de navegación y especificación de pantallas. No es todavía la aplicación productiva.
 
@@ -12,16 +12,14 @@ Se conserva la marca NEXUS-Q y se sustituye únicamente el descriptor de product
 
 ## 2. Referencia inspeccionada
 
-Archivos revisados:
+Referencias visuales revisadas en NEXUS-Q Vault:
 - `apps/desktop/ui/index.html`
 - `apps/desktop/ui/styles.css`
 - `apps/desktop/ui/app.js`
 - `apps/desktop/tauri.conf.json`
-- `apps/desktop/Cargo.toml`
-- `apps/desktop/capabilities/default.json`
 - Capturas: `docs/screenshots/{overview,vault-access,file-operations,settings}.png`
 
-Vault usa Tauri 2 + Rust + HTML/CSS/JavaScript (no Svelte). Su interfaz tiene navegación lateral de vistas independientes, preferencias locales, selector de idioma y tema claro/oscuro. El repositorio estaba limpio en la inspección (`main`, commit `eaab774`). No se ha modificado Vault.
+Vault usa Tauri 2 + Rust + HTML/CSS/JavaScript (no Svelte). Sign conserva su sistema visual —especialmente la barra lateral, los tokens, los paneles y los temas— pero su frontend propio se implementa con **Svelte 5 + TypeScript + Vite**. La interfaz de Sign tiene diccionarios separados y English como idioma principal, con español y catalán. El repositorio de Vault se inspeccionó en `main`, commit `eaab774`; no se ha modificado.
 
 ## 3. Sistema visual — tokens de referencia
 
@@ -30,11 +28,11 @@ Vault usa Tauri 2 + Rust + HTML/CSS/JavaScript (no Svelte). Su interfaz tiene na
 |---|---:|
 | Sidebar desktop | 252 px |
 | Sidebar medio | 210 px |
-| Sidebar compacto | 65 px |
+| Sidebar compacto | 72 px |
 | Shell padding | 30 px vertical; clamp(28px, 3vw, 58px) horizontal |
 | Shell max width | 1700 px |
 | Ventana inicial | 1440 × 940 |
-| Ventana mínima | 1024 × 700 |
+| Ventana mínima | 980 × 680 |
 | Panel radius | 11 px |
 | Control radius | 7 px |
 | Sidebar nav radius | 8 px |

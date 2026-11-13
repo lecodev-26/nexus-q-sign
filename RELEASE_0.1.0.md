@@ -22,7 +22,7 @@ Sign es independiente de Vault y de las demás aplicaciones NEXUS-Q. Solo compar
 ## 3. Alcance 0.1.0
 
 ### Incluido (P0)
-1. Aplicación Tauri 2 autónoma con la estética de la familia NEXUS-Q.
+1. Standalone Tauri 2 desktop application with a Svelte 5 + TypeScript + Vite frontend and the NEXUS-Q visual identity.
 2. Inicialización, apertura, bloqueo y desbloqueo del almacén local cifrado propio de Sign.
 3. Creación y gestión básica de identidades Sign con claves ML-DSA-65 dedicadas a firma de documentos.
 4. Importación/selección local de documentos mediante diálogos nativos.
@@ -35,7 +35,7 @@ Sign es independiente de Vault y de las demás aplicaciones NEXUS-Q. Solo compar
 11. Historial local SQLite de metadatos, sin almacenar documentos, rutas completas ni claves privadas.
 12. Informe de verificación exportable.
 13. Estados de error, bloqueo, progreso y éxito sin simular resultados.
-14. Interfaz en español e inglés; tema claro/oscuro y accesibilidad básica.
+14. Interface built with Svelte 5, TypeScript and Vite; English by default with Spanish and Catalan options, light/dark themes and basic accessibility.
 
 ### Fuera de alcance
 - Conexión o integración con Vault u otras aplicaciones NEXUS-Q.

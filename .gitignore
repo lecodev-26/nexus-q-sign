@@ -25,3 +25,8 @@
 Thumbs.db
 .idea/
 .vscode/
+
+# Frontend build output
+/apps/desktop/node_modules/
+/apps/desktop/dist/
+/apps/desktop/.svelte-kit/
