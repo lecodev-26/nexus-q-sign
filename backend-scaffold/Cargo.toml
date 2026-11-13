@@ -1,0 +1,11 @@
+[package]
+name = "nexus-q-sign-backend"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.90"
+license = "MIT"
+description = "Fail-closed backend scaffold for NEXUS-Q Sign"
+
+[lib]
+name = "nexus_q_sign_backend"
+path = "src/lib.rs"

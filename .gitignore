@@ -1,0 +1,27 @@
+# Rust
+/target/
+**/target/
+
+# Tauri build output
+/apps/desktop/target/
+
+# Local app data and signing material
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+*.nqsk
+*.nqsk.tmp
+*.nqsig
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Environment and editor files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
