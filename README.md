@@ -35,6 +35,32 @@ NEXUS-Q Sign is an independent desktop application for creating and verifying de
 - **Multilingual interface:** English by default, with Spanish and Catalan translations.
 - **Independent by design:** Sign does not require, connect to or share runtime state with NEXUS-Q Vault.
 
+## Application screenshots
+
+The following screenshots show the NEXUS-Q Sign desktop interface running locally. They document the main workspace and the five primary areas of the application.
+
+### Overview
+
+![NEXUS-Q Sign overview](docs/screenshots/01-overview.png)
+
+### Sign document
+
+![Prepare a document for detached signing](docs/screenshots/02-sign-document.png)
+
+### Verify signature
+
+![Verify a document and its detached signature](docs/screenshots/03-verify-signature.png)
+
+### Identities
+
+![Manage local signing identities](docs/screenshots/04-identities.png)
+
+### History
+
+![Review local signing and verification history](docs/screenshots/05-history.png)
+
+These images are interface documentation, not evidence of a completed cryptographic signing or verification test.
+
 ## Product independence
 
 NEXUS-Q Sign and NEXUS-Q Vault are separate applications with independent storage, identities, keys, configuration, history and lifecycle.
