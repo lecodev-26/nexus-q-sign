@@ -761,7 +761,84 @@ fn parse_hex_id(s: &str) -> Option<[u8; 16]> {
     Some(out)
 }
 
+#[cfg(target_os = "linux")]
+fn configure_webkit_fontconfig() {
+    use std::{collections::HashSet, process::Command};
+
+    // Respect an explicit user Fontconfig override.
+    if std::env::var_os("FONTCONFIG_FILE").is_some() {
+        return;
+    }
+
+    // The blank WebKitGTK window was reproduced on hosts with an unusually
+    // large font catalogue. Keep normal Linux installations untouched.
+    let Ok(output) = Command::new("fc-list").arg(":").arg("family").output() else {
+        return;
+    };
+    if !output.status.success() {
+        return;
+    }
+    let families: HashSet<String> = String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .map(str::to_owned)
+        .collect();
+    if families.len() <= 500 {
+        return;
+    }
+
+    let dejavu = Path::new("/usr/share/fonts/truetype/dejavu");
+    if !dejavu.is_dir() {
+        eprintln!(
+            "NEXUS-Q Sign: large Fontconfig catalogue detected, but DejaVu fonts are unavailable; leaving system Fontconfig unchanged."
+        );
+        return;
+    }
+
+    let cache_root = std::env::var_os("XDG_CACHE_HOME")
+        .map(PathBuf::from)
+        .or_else(|| std::env::var_os("HOME").map(|home| PathBuf::from(home).join(".cache")));
+    let Some(cache_root) = cache_root else {
+        return;
+    };
+    let cache_dir = cache_root.join("nexus-q-sign").join("fontconfig");
+    if fs::create_dir_all(&cache_dir).is_err() {
+        return;
+    }
+    let config_path = cache_dir.join("fontconfig.conf");
+    let xml_escape = |value: &str| {
+        value
+            .replace('&', "&amp;")
+            .replace('<', "&lt;")
+            .replace('>', "&gt;")
+            .replace('"', "&quot;")
+    };
+    let config = format!(
+        "<?xml version=\"1.0\"?>\n<!DOCTYPE fontconfig SYSTEM \"urn:fontconfig:fonts.dtd\">\n<fontconfig>\n  <dir>{}</dir>\n  <cachedir>{}</cachedir>\n  <include ignore_missing=\"yes\">/etc/fonts/conf.d</include>\n  <config><rescan><int>0</int></rescan></config>\n</fontconfig>\n",
+        xml_escape(&dejavu.to_string_lossy()),
+        xml_escape(&cache_dir.to_string_lossy())
+    );
+    if fs::write(&config_path, config).is_err() {
+        return;
+    }
+
+    // This runs at the very start of main(), before Tauri creates WebKitGTK.
+    // SAFETY: no threads have been started yet; this is the only environment
+    // mutation performed by the process and it precedes all child processes.
+    unsafe {
+        std::env::set_var("FONTCONFIG_FILE", &config_path);
+    }
+    eprintln!(
+        "NEXUS-Q Sign: limited WebKit Fontconfig catalogue from {} to DejaVu families for this session.",
+        families.len()
+    );
+}
+
 fn main() {
+    #[cfg(target_os = "linux")]
+    configure_webkit_fontconfig();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
