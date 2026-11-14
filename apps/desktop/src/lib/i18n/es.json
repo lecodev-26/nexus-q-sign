@@ -9,13 +9,13 @@
   "ecosystem": "ECOSISTEMA NEXUS-Q",
   "desktopMode": "APLICACIÓN DE ESCRITORIO",
   "webMode": "INTERFAZ WEB — REQUIERE ESCRITORIO",
-  "overviewKicker": "FIRMAS DIGITALES DETACHED",
+  "overviewKicker": "FIRMAS DIGITALES SEPARADAS",
   "overviewTitle": "Firma y verifica documentos con control local.",
   "overviewDescription": "Crea firmas criptográficas independientes sin modificar tus archivos originales. Tus identidades y claves cifradas permanecen en este dispositivo.",
   "versionLabel": "Versión objetivo: 0.1.0",
   "formatLabel": "Formato de firma: .nqsig",
   "algorithmLabel": "Algoritmo: ML-DSA-65",
-  "signDescription": "Crea una firma detached de un documento.",
+  "signDescription": "Crea una firma separada para un documento.",
   "verifyDescription": "Comprueba la integridad y autenticidad de una firma.",
   "identityDescription": "Gestiona tus identidades locales de firma.",
   "historyDescription": "Consulta la actividad de firma y verificación de este dispositivo.",
@@ -24,7 +24,7 @@
   "signTitle": "Preparar un documento para firmar",
   "verifyTitle": "Verificar un documento firmado",
   "signIntro": "Selecciona el documento original. Se creará un sidecar .nqsig independiente junto a él.",
-  "verifyIntro": "Selecciona el documento original y su sidecar .nqsig. La integridad, validez criptográfica y reconocimiento local de identidad se muestran por separado.",
+  "verifyIntro": "Selecciona el documento original y su archivo de firma independiente .nqsig. La integridad, validez criptográfica y reconocimiento local de identidad se muestran por separado.",
   "chooseDocument": "Seleccionar documento",
   "chooseSidecar": "Seleccionar firma .nqsig",
   "originalUnchanged": "El documento original nunca se modifica.",
@@ -113,5 +113,7 @@
   "errorDeleteIdentity": "No se pudo eliminar la identidad.",
   "errorSignDocument": "No se pudo firmar el documento.",
   "errorVerifyDocument": "No se pudo verificar el documento.",
-  "identityRequired": "Desbloquea una identidad antes de firmar."
+  "identityRequired": "Desbloquea una identidad antes de firmar.",
+  "brandTagline": "FIRMA DE DOCUMENTOS",
+  "primaryNavigation": "Navegación principal"
 }

@@ -89,3 +89,79 @@ body.dark .hero-card,body.dark .action-card{background:var(--surface)}body.dark 
 @media(max-width:850px){.app-layout{grid-template-columns:72px minmax(0,1fr)}.sidebar{padding:20px 8px}.side-brand{justify-content:center;padding:0}.side-brand span,.side-label,.nav-label,.vault-status span,.version{display:none}.nav-item{justify-content:center;padding:12px 0}.nav-icon{width:auto}.vault-status{justify-content:center;padding:12px 0}.main-area{padding:22px 18px}.action-grid{grid-template-columns:1fr}}
 @media(max-width:620px){.app-layout{display:block}.sidebar{position:relative;width:100%;height:auto;min-height:0;padding:12px;gap:10px}.side-brand{justify-content:flex-start}.side-brand span{display:block}.side-label,.vault-status,.version,.sidebar-spacer,.settings-nav{display:none}.side-nav{display:flex;overflow-x:auto;gap:4px}.nav-item{width:auto;flex:none;padding:10px 11px}.nav-label{display:inline}.nav-icon{width:18px}.main-area{padding:18px 14px}.topbar{align-items:flex-start;flex-wrap:wrap}.top-actions{flex-wrap:wrap}.status-pill{display:none}.hero-card,.overview-hero{padding:20px}.identity-card{align-items:flex-start;flex-direction:column}.identity-card>.secondary-action{align-self:flex-end}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+
+/* Theme and accessibility normalization: keep every surface driven by the same tokens. */
+:root {
+  color-scheme: light;
+  --page: #f5f5f3;
+  --text: #171717;
+  --muted: #686868;
+  --line: #deded9;
+  --surface: #ffffff;
+  --surface-2: #f7f7f5;
+  --control-bg: #ffffff;
+  --control-text: #171717;
+  --focus: #8a6b2d;
+}
+body { min-width: 0; background: var(--page); color: var(--text); }
+body.dark {
+  color-scheme: dark;
+  --page: #101010;
+  --text: #f2f2f2;
+  --muted: #b0b0b0;
+  --line: #383838;
+  --surface: #1a1a1a;
+  --surface-2: #141414;
+  --control-bg: #222222;
+  --control-text: #f2f2f2;
+  --focus: #d2b46e;
+  background: var(--page);
+  color: var(--text);
+}
+.main-area, .content { color: var(--text); }
+.hero-card, .action-card, .overview-card, .overview-flow, .overview-note,
+.operation-center, .identity-card, .empty-state {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--line);
+}
+.muted, .action-card p, .meta-row span, .settings-version,
+.operation-center-heading p, .operation-empty { color: var(--muted); }
+.meta-row b { color: var(--text); }
+input, select, textarea, .language-select, .identity-form input, .identity-unlock input {
+  background: var(--control-bg);
+  color: var(--control-text);
+  border-color: var(--line);
+}
+select option { background: var(--control-bg); color: var(--control-text); }
+input::placeholder { color: var(--muted); opacity: .8; }
+input:focus-visible, select:focus-visible, textarea:focus-visible,
+button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+body.dark .hero-card, body.dark .action-card, body.dark .identity-card,
+body.dark .overview-card, body.dark .overview-flow, body.dark .overview-note,
+body.dark .operation-center { background: var(--surface); border-color: var(--line); }
+body.dark .dropzone { background: var(--surface-2); border-color: #555; }
+body.dark .notice { background: #242018; border-color: #55472b; color: #e8dfc9; }
+body.dark .notice b, body.dark .notice p { color: inherit; }
+body.dark .secondary-action, body.dark .language-select, body.dark .icon-button {
+  background: var(--control-bg); color: var(--control-text); border-color: var(--line);
+}
+body.dark .identity-form input, body.dark .identity-unlock input {
+  background: var(--control-bg); color: var(--control-text); border-color: var(--line);
+}
+body.dark .danger-action { color: #ff9b9b; }
+body.dark .session-state { color: #8bd5ad; }
+body.dark .nav-item { color: #c0c0c0; }
+body.dark .nav-item:hover, body.dark .nav-item.active { background: #303030; color: #ffffff; }
+@media (max-width: 850px) {
+  body { min-width: 0; }
+  .app-layout { grid-template-columns: 72px minmax(0, 1fr); }
+}
+@media (max-width: 620px) {
+  .app-layout { display: block; }
+}

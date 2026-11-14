@@ -113,5 +113,7 @@
   "errorDeleteIdentity": "Could not delete the identity.",
   "errorSignDocument": "Could not sign the document.",
   "errorVerifyDocument": "Could not verify the document.",
-  "identityRequired": "Unlock an identity before signing."
+  "identityRequired": "Unlock an identity before signing.",
+  "brandTagline": "DOCUMENT SIGNING",
+  "primaryNavigation": "Primary navigation"
 }

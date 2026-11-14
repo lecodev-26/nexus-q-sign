@@ -73,10 +73,15 @@
     localStorage.setItem("nexus-q-sign-language", value);
   }
 
+  function applyTheme(value: boolean): void {
+    dark = value;
+    document.body.classList.toggle("dark", value);
+    document.documentElement.style.colorScheme = value ? "dark" : "light";
+    localStorage.setItem("nexus-q-sign-theme", value ? "dark" : "light");
+  }
+
   function toggleTheme(): void {
-    dark = !dark;
-    document.body.classList.toggle("dark", dark);
-    localStorage.setItem("nexus-q-sign-theme", dark ? "dark" : "light");
+    applyTheme(!dark);
   }
 
   function navigate(next: Page): void {
@@ -254,8 +259,7 @@
     const savedLocale = localStorage.getItem("nexus-q-sign-language");
     if (savedLocale && isLocale(savedLocale)) locale = savedLocale;
     document.documentElement.lang = locale;
-    dark = localStorage.getItem("nexus-q-sign-theme") === "dark";
-    document.body.classList.toggle("dark", dark);
+    applyTheme(localStorage.getItem("nexus-q-sign-theme") === "dark");
     isDesktop = "__TAURI_INTERNALS__" in window;
     if (isDesktop) {
       void desktopInvoke<AppInfo>("app_info").then((info) => { appVersion = info.version; }).catch(() => {});
@@ -272,11 +276,11 @@
 <div class="app-layout">
   <aside class="sidebar">
     <a class="side-brand" href="#overview" onclick={(event) => { event.preventDefault(); navigate("overview"); }}>
-      <img src="/assets/nexus-q-mark.png" alt="" />
-      <span><b>NEXUS-Q <strong>Sign</strong></b><small>DOCUMENT SIGNING</small></span>
+      <img src="./assets/nexus-q-mark.png" alt="" />
+      <span><b>NEXUS-Q <strong>Sign</strong></b><small>{t("brandTagline")}</small></span>
     </a>
     <div class="side-label">{t("workspace")}</div>
-    <nav class="side-nav" aria-label="Primary navigation">
+    <nav class="side-nav" aria-label={t("primaryNavigation")}>
       {#each navItems as item (item.id)}
         <button class:active={page === item.id} class="nav-item" type="button" onclick={() => navigate(item.id)}>
           <span class="nav-icon">{item.icon}</span><span class="nav-label">{t(item.label)}</span>
@@ -305,7 +309,7 @@
             <option value={code}>{label}</option>
           {/each}
         </select>
-        <button id="theme-toggle" class="icon-button" type="button" aria-label={t("themeToggle")} title={t("themeToggle")} onclick={toggleTheme}>◐</button>
+        <button id="theme-toggle" class="icon-button" type="button" aria-label={t("themeToggle")} aria-pressed={dark} title={t("themeToggle")} onclick={toggleTheme}>◐</button>
       </div>
     </header>
 

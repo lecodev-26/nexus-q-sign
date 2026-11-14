@@ -9,13 +9,13 @@
   "ecosystem": "ECOSISTEMA NEXUS-Q",
   "desktopMode": "APLICACIÓ D'ESCRIPTORI",
   "webMode": "INTERFÍCIE WEB — CAL L'ESCRIPTORI",
-  "overviewKicker": "SIGNATURES DIGITALS DETACHED",
+  "overviewKicker": "SIGNATURES DIGITALS SEPARADES",
   "overviewTitle": "Signa i verifica documents amb control local.",
   "overviewDescription": "Crea signatures criptogràfiques independents sense modificar els fitxers originals. Les identitats i les claus xifrades romanen en aquest dispositiu.",
   "versionLabel": "Versió objectiu: 0.1.0",
   "formatLabel": "Format de signatura: .nqsig",
   "algorithmLabel": "Algorisme: ML-DSA-65",
-  "signDescription": "Crea una signatura detached d'un document.",
+  "signDescription": "Crea una signatura separada per a un document.",
   "verifyDescription": "Comprova la integritat i l'autenticitat d'una signatura.",
   "identityDescription": "Gestiona les identitats locals de signatura.",
   "historyDescription": "Consulta l'activitat de signatura i verificació d'aquest dispositiu.",
@@ -113,5 +113,7 @@
   "errorDeleteIdentity": "No s'ha pogut eliminar la identitat.",
   "errorSignDocument": "No s'ha pogut signar el document.",
   "errorVerifyDocument": "No s'ha pogut verificar el document.",
-  "identityRequired": "Desbloqueja una identitat abans de signar."
+  "identityRequired": "Desbloqueja una identitat abans de signar.",
+  "brandTagline": "SIGNATURA DE DOCUMENTS",
+  "primaryNavigation": "Navegació principal"
 }
